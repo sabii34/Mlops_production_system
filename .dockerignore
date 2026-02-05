@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local environments
+venv/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Git
+.git/
+.gitignore
+
+# Large / generated stuff
+mlruns/
+data/
+reports/
+*.log
+
+# OS/IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
