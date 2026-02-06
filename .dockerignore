@@ -17,6 +17,7 @@ venv/
 .gitignore
 
 # Large / generated stuff
+models/
 mlruns/
 data/
 reports/
