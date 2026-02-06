@@ -25,3 +25,5 @@ jobs:
 
       - name: Run tests
         run: pytest -q
+        env:
+    SKIP_MODEL_LOAD: "1"

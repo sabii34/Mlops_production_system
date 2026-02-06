@@ -1,3 +1,5 @@
+![CI](https://github.com/sabii34/Mlops_production_system/actions/workflows/ci.yml/badge.svg)
+
 # End-to-End ML System
 
 A production-style, end-to-end Machine Learning project that demonstrates:
