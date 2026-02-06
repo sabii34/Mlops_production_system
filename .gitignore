@@ -1,52 +1,39 @@
-# =========================
-# Python
-# =========================
+# Python cache
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-*.egg-info/
-dist/
-build/
 
-# =========================
-# Virtual Environments
-# =========================
+# Environments
+.venv/
 venv/
-.env/
+.env
 .env.*
 
-# =========================
 # Jupyter
-# =========================
 .ipynb_checkpoints/
 
-# =========================
-# Data (IMPORTANT)
-# =========================
-
-data/processed/
-
-# =========================
-# Model Artifacts
-# =========================
-models/
-mlruns/
-
-# =========================
-# Logs & Reports
-# =========================
-*.log
-
-# =========================
 # OS / IDE
-# =========================
+.DS_Store
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
 
-# =========================
-# Docker
-# =========================
-*.tar
+# MLflow
+mlruns/
+
+# Data (usually not pushed)
+data/
+# If you want to keep a sample dataset, do:
+# !data/sample.csv
+
+# Model artifacts (DO NOT PUSH large files)
+models/*.joblib
+models/*.pkl
+models/*.pickle
+
+# Keep folder structure
+!models/.gitkeep
+
+# Reports / outputs (optional)
+reports/
+
