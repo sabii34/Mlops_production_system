@@ -15,16 +15,16 @@ model = None
 def get_model():
     global model
     if model is None:
+        if SKIP_MODEL_LOAD:
+            # tests will monkeypatch joblib.load; no file check needed
+            model = joblib.load(MODEL_PATH)
+            return model
+
         if not os.path.exists(MODEL_PATH):
             raise FileNotFoundError(f"Model not found at: {MODEL_PATH}")
+
         model = joblib.load(MODEL_PATH)
     return model
-
-@app.on_event("startup")
-def startup():
-    # In CI we don’t have the real model file, so skip.
-    if not SKIP_MODEL_LOAD:
-        get_model()
 
 class Features(BaseModel):
     MedInc: float

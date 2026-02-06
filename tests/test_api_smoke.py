@@ -1,22 +1,20 @@
 import os
-os.environ["SKIP_MODEL_LOAD"] = "1"
-
-from fastapi.testclient import TestClient
 import importlib
 import joblib
-
-def fake_predict(X):
-    return [1.23]
+from fastapi.testclient import TestClient
 
 def test_predict(monkeypatch):
-    monkeypatch.setattr(
-        joblib,
-        "load",
-        lambda *_: type("M", (), {"predict": lambda self, X: fake_predict(X)})()
-    )
+    os.environ["SKIP_MODEL_LOAD"] = "1"
+
+    class DummyModel:
+        def predict(self, X):
+            return [1.23]
+
+    monkeypatch.setattr(joblib, "load", lambda *_: DummyModel())
 
     import app as app_module
-    importlib.reload(app_module)  # ensure patched load is used
+    importlib.reload(app_module)
+
     client = TestClient(app_module.app)
 
     r = client.post("/predict", json={
@@ -24,5 +22,6 @@ def test_predict(monkeypatch):
         "Population": 2400, "AveOccup": 3.1, "Latitude": 34.2, "Longitude": -118.3
     })
     assert r.status_code == 200
+
     assert "prediction" in r.json()
 
