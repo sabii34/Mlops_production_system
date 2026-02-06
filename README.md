@@ -13,13 +13,13 @@ A production-style, end-to-end Machine Learning project that demonstrates:
 ## Project Structure (High Level)
 
 .
-├── src/ # Training, preprocessing, prediction logic
-├── models/ # Saved artifacts (model.joblib, preprocessor.joblib)
-├── data/ # Raw / processed data (optional)
-├── app.py # FastAPI application entrypoint
-├── requirements.txt # Local development dependencies
-├── requirements-docker.txt # Docker runtime dependencies
-├── Dockerfile # Docker image definition
+├── src/ # Training, preprocessing, prediction logic<br>
+├── models/ # Saved artifacts (model.joblib, preprocessor.joblib)<br>
+├── data/ # Raw / processed data (optional)<br>
+├── app.py # FastAPI application entrypoint<br>
+├── requirements.txt # Local development dependencies<br>
+├── requirements-docker.txt # Docker runtime dependencies<br>
+├── Dockerfile # Docker image definition<br>
 └── README.md
 
 ---
@@ -104,7 +104,7 @@ Note: Prediction value may vary depending on training randomness.
 
 - docker run --rm -p 8000:8000 mlops-api:1.0
 
-##### Open Swagger UI:
+#### Open Swagger UI:
 
 - http://127.0.0.1:8000/docs
 
@@ -140,6 +140,8 @@ Expected response:
 
 - Cloud deployment (AWS / GCP / Azure)
 
-- _Author_
-- _Saba Shahbaz_
-- _Aspiring MLOps Engineer | End-to-End ML Systems_
+## _Author_
+
+### _Saba Shahbaz_
+
+### _Aspiring MLOps Engineer | End-to-End ML Systems_
