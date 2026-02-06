@@ -1,25 +1,32 @@
-from pathlib import Path
-import pandas as pd
+# app.py
+import os
 import joblib
-import numpy as np
-from fastapi import FastAPI
+import pandas as pd
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
-from src.config.config import PathsConfig
 
 app = FastAPI(title="MLOps Production Model API")
 
-cfg = PathsConfig()
+MODEL_PATH = os.getenv("MODEL_PATH", "models/model.joblib")
+SKIP_MODEL_LOAD = os.getenv("SKIP_MODEL_LOAD", "0") == "1"
 
-# Load artifacts once at startup
-MODEL_PATH = cfg.models_dir / "model.joblib"
-PREPROCESSOR_PATH = cfg.models_dir / "preprocessor.joblib"
+model = None
 
-model = joblib.load(MODEL_PATH)
-preprocessor = joblib.load(PREPROCESSOR_PATH)
+def get_model():
+    global model
+    if model is None:
+        if not os.path.exists(MODEL_PATH):
+            raise FileNotFoundError(f"Model not found at: {MODEL_PATH}")
+        model = joblib.load(MODEL_PATH)
+    return model
 
+@app.on_event("startup")
+def startup():
+    # In CI we don’t have the real model file, so skip.
+    if not SKIP_MODEL_LOAD:
+        get_model()
 
-class HousingInput(BaseModel):
+class Features(BaseModel):
     MedInc: float
     HouseAge: float
     AveRooms: float
@@ -29,27 +36,18 @@ class HousingInput(BaseModel):
     Latitude: float
     Longitude: float
 
-
 @app.get("/")
-def health_check():
-    return {"status": "ok", "message": "Model API is running"}
+def health():
+    return {"status": "ok"}
 
-...
 @app.post("/predict")
-def predict(input_data: HousingInput):
-    df = pd.DataFrame([{
-        "MedInc": input_data.MedInc,
-        "HouseAge": input_data.HouseAge,
-        "AveRooms": input_data.AveRooms,
-        "AveBedrms": input_data.AveBedrms,
-        "Population": input_data.Population,
-        "AveOccup": input_data.AveOccup,
-        "Latitude": input_data.Latitude,
-        "Longitude": input_data.Longitude,
-    }])
+def predict(payload: Features):
+    try:
+        m = get_model()
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e))
 
-    X = preprocessor.transform(df)
-    prediction = model.predict(X)
-
-    return {"prediction": float(prediction[0])}
+    X = pd.DataFrame([payload.model_dump()])
+    pred = float(m.predict(X)[0])
+    return {"prediction": pred}
 
