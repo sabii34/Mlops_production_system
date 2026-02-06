@@ -10,15 +10,18 @@ WORKDIR /app
 COPY requirements-docker.txt /app/requirements-docker.txt
 RUN pip install --no-cache-dir --default-timeout=300 --retries 10 -r requirements-docker.txt
 
-
-
-# Copy application code + required artifacts
+# Copy application code
 COPY src /app/src
 COPY app.py /app/app.py
-COPY models /app/models
+
+# Copy model artifacts (make sure folder exists)
+RUN mkdir -p /app/models
+COPY models/model.joblib /app/models/model.joblib
+COPY models/preprocessor.joblib /app/models/preprocessor.joblib
 
 # Expose API port
 EXPOSE 8000
 
 # Run the API
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
