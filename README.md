@@ -147,3 +147,28 @@ Expected response:
 ### _Saba Shahbaz_
 
 ### _Aspiring MLOps Engineer | End-to-End ML Systems_
+
+## Architecture
+
+flowchart TD
+A[User / Client] -->|POST /predict| B[FastAPI App (app.py)]
+B --> C[get_model()]
+C -->|joblib.load| D[(models/model.joblib)]
+B --> E[pandas DataFrame]
+E --> F[Model.predict()]
+F --> G[JSON response: prediction]
+
+subgraph Training Pipeline (local)
+H[Data ingestion] --> I[Preprocessing / Feature build]
+I --> J[Train model]
+J --> K[Evaluate metrics]
+K --> L[Save artifacts]
+L --> D
+K --> M[Optional: MLflow tracking]
+end
+
+subgraph DevOps / MLOps
+N[Dockerfile] --> O[Docker Image]
+O --> P[Container Run]
+Q[GitHub Actions CI] --> R[pytest]
+end
