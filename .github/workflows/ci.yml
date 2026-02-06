@@ -10,8 +10,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      SKIP_MODEL_LOAD: "1"
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,5 +29,3 @@ jobs:
 
       - name: Run tests
         run: pytest -q
-        env:
-    SKIP_MODEL_LOAD: "1"
